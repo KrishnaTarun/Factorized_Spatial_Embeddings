@@ -1,21 +1,17 @@
 import os
 import numpy as np
-import tensorflow as tf
-
 import torch
 from skimage import io, img_as_float
-import sys
 from deformation import feature_warping, image_warping
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import skimage  
-tf.enable_eager_execution()
 
 
 np.random.seed(47)
 torch.torch.manual_seed(47)
-tf.random.set_random_seed(47)
+
 
 class ImageData(Dataset):
 

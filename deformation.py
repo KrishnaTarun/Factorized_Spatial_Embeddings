@@ -1,7 +1,4 @@
-
 import numpy as np
-
-
 
 def image_warping(img, w):
     t_ = np.array([  # target position  
