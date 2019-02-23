@@ -91,7 +91,7 @@ out_name = os.path.join(OUTPUT_DIR, args.img_folder)
 
 
 face_dataset = ImageData(root_dir=args.input_dir,\
-                                transform=transforms.Compose([PreprocessData(146,146, mode= args.mode)]))
+                                transform=transforms.Compose([PreprocessData(args.scale_size,args.crop_size, mode= args.mode)]))
 dataloader = DataLoader(face_dataset, batch_size = args.batch_size,
                         shuffle = True)
 #--------------- Load Weights ----------------#
@@ -144,17 +144,17 @@ with torch.no_grad():
 
         def visualizePlot(mask, i_image, val, indx):
 
-            resize_scale = (128.0/mask.size()[0])
+            resize_scale = 1.0*(args.crop_size/mask.size()[0])
             if device=="cpu":
                 mask = skimage.transform.resize(mask.numpy(),\
-                        (128, 128),anti_aliasing=True, mode='reflect')
+                        (args.crop_size, args.crop_size),anti_aliasing=True, mode='reflect')
                 i_image = i_image.squeeze(0).permute(1,2,0).numpy().copy()
                 val  = val.numpy()
                 indx = indx.numpy()
             
             else:
                 mask = skimage.transform.resize(mask.cpu().numpy(),\
-                        (128, 128),anti_aliasing=True, mode='reflect')
+                        (args.crop_size, args.crop_size),anti_aliasing=True, mode='reflect')
                 i_image = i_image.squeeze(0).permute(1,2,0).cpu().numpy()
                 val  = val.cpu().numpy()
                 indx = indx.cpu().numpy()

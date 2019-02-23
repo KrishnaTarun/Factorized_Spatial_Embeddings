@@ -74,14 +74,14 @@ class PreprocessData(object):
         #transform
         image = skimage.transform.resize(image, (self.scale_size, self.scale_size),anti_aliasing=True, mode='reflect')
 
-        #crop offset
-        top, left = np.floor(np.random.uniform(0,self.scale_size - self.crop_size + 1, 2)).astype(np.int32)
-        if self.scale_size > self.crop_size:
-            image = image[top:self.crop_size, left:self.crop_size]
+        # #crop offset
+        # top, left = np.floor(np.random.uniform(0,self.scale_size - self.crop_size + 1, 2)).astype(np.int32)
+        # if self.scale_size > self.crop_size:
+        #     image = image[top:self.crop_size, left:self.crop_size]
         
-        elif self.scale_size < self.crop_size:
+        # elif self.scale_size < self.crop_size:
 
-            raise Exception("scale size cannot be less than crop size")
+        #     raise Exception("scale size cannot be less than crop size")
 
         if self.mode == "train":
             #deform input images
@@ -93,12 +93,12 @@ class PreprocessData(object):
             deformation = deformation[0]
             
             #crop after warping
-            input_image    = input_image[5:128, 5:128]
-            deformed_image = deformed_image[5:128, 5:128] 
+            input_image    = input_image[5:5+self.crop_size, 5: 5 + self.crop_size]
+            deformed_image = deformed_image[5:5+self.crop_size, 5: 5 + self.crop_size] 
 
-            #resize    
-            input_image    = skimage.transform.resize(input_image, (128, 128),anti_aliasing=True, mode='reflect')
-            deformed_image = skimage.transform.resize(deformed_image, (128, 128),anti_aliasing=True, mode='reflect')
+            # #resize    
+            # input_image    = skimage.transform.resize(input_image, (128, 128),anti_aliasing=True, mode='reflect')
+            # deformed_image = skimage.transform.resize(deformed_image, (128, 128),anti_aliasing=True, mode='reflect')
 
             #clip the values again
             input_image = np.clip(input_image, a_min=-1, a_max =1)
@@ -115,7 +115,7 @@ class PreprocessData(object):
         if self.mode =='test':
 
             #resize    
-            input_image = skimage.transform.resize(image, (128, 128), anti_aliasing=True, mode='reflect')
+            input_image = skimage.transform.resize(image, (self.crop_size, self.crop_size), anti_aliasing=True, mode='reflect')
 
             #clip the values again
             input_image = np.clip(input_image, a_min=-1, a_max =1)
@@ -129,7 +129,7 @@ class PreprocessData(object):
 if __name__=="__main__":
     
     face_dataset = ImageData(root_dir='../FSE_tf/celebA/img_align_celeba',\
-                                transform=transforms.Compose([PreprocessData(146,146,mode='train')]))
+                                transform=transforms.Compose([PreprocessData(100,80,mode='train')]))
     dataloader = DataLoader(face_dataset, batch_size=32,
                         shuffle=True)
 

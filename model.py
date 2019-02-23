@@ -10,23 +10,23 @@ class ConvNet(nn.Module):
   def __init__(self, n_channels, n_classes):
     super(ConvNet,self).__init__()
 
-    self.conv1 = nn.Conv2d(n_channels,20,5,stride=1,padding=0,bias=False)
+    self.conv1 = nn.Conv2d(n_channels,20,5,stride=1,padding=2,bias=False)
     self.batchnorm1 = nn.BatchNorm2d(20,momentum=0.9)
-    self.maxpool1 = nn.MaxPool2d(2,stride=2)
+    self.maxpool1 = nn.MaxPool2d(5,stride=2)
     
-    self.conv2 = nn.Conv2d(20,48,5,stride=1,padding=0,bias=False)
+    self.conv2 = nn.Conv2d(20,48,5,stride=1,padding=2,bias=False)
     self.batchnorm2 = nn.BatchNorm2d(48,momentum=0.9)
     
-    self.conv3 = nn.Conv2d(48,64,5,stride=1,padding=0,bias=False)
+    self.conv3 = nn.Conv2d(48,64,5,stride=1,padding=2,bias=False)
     self.batchnorm3 = nn.BatchNorm2d(64,momentum=0.9)
     
-    self.conv4 = nn.Conv2d(64,80,5,stride=1,padding=0,bias=False)
+    self.conv4 = nn.Conv2d(64,80,5,stride=1,padding=2,bias=False)
     self.batchnorm4 = nn.BatchNorm2d(80,momentum=0.9)
     
-    self.conv5 = nn.Conv2d(80,256,5,stride=1,padding=0,bias=False)
+    self.conv5 = nn.Conv2d(80,256,5,stride=1,padding=2,bias=False)
     self.batchnorm5 = nn.BatchNorm2d(256, momentum=0.9)
     
-    self.conv6 = nn.Conv2d(256,n_classes,5,stride=1,padding=0,bias=False)
+    self.conv6 = nn.Conv2d(256,n_classes,5,stride=1,padding=2,bias=False)
     self.batchnorm6 = nn.BatchNorm2d(n_classes, momentum=0.9)
     
 
