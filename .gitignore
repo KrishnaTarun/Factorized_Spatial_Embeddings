@@ -1,2 +1,3 @@
 OUTPUT/*
 check.py
+__pycache__/*
