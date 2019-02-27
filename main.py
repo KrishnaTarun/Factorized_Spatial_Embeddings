@@ -29,7 +29,7 @@ MOMENTUM = 0.5
 WEIGHT_DECAY = 0.0005
 SCALE_SIZE = 146
 CROP_SIZE = 128
-MAX_EPOCH = 6
+MAX_EPOCH = 20
 OUTPUT_DIR = 'OUTPUT'
 CHECKPOINT = 'checkpoint' 
 #-------------------------------#
