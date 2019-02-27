@@ -157,11 +157,11 @@ def alignLoss(p1, p2, deformation, args):
     loss= torch.mean(t1 + t2 - 2.* t3)
     return args.align_weight * loss.unsqueeze(0)
 
-def train(dataloader, net, optimizer, args, OUTPUT_DIR):
+def train(dataloader, net, optimizer, args):
 
-    if os.path.isfile(os.path.join(OUTPUT_DIR, args.checkpoint)):
+    if os.path.isfile(os.path.join(args.output_dir, args.checkpoint)):
         print ("loading from checkpoint...")
-        checkpoint = torch.load(args.checkpoint)
+        checkpoint = torch.load(os.path.join(args.output_dir, args.checkpoint))
         net.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         epoch = checkpoint['epoch']
@@ -212,7 +212,7 @@ def train(dataloader, net, optimizer, args, OUTPUT_DIR):
                     'model_state_dict': net.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict(),
                     'loss': loss,}, 
-                    os.path.join(OUTPUT_DIR, args.checkpoint))
+                    os.path.join(args.output_dir, args.checkpoint))
                     store = loss.item()
 
             steps+=1
@@ -224,8 +224,8 @@ def main():
 
     args = get_arguments()
 
-    if not os.path.isdir(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    if not os.path.isdir(args.output_dir):
+        os.makedirs(args.output_dir)
 
     face_dataset = ImageData(root_dir=args.input_dir,\
                                     transform=transforms.Compose([PreprocessData(args.scale_size, args.crop_size)]))

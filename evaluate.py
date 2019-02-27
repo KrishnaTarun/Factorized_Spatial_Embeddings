@@ -81,12 +81,12 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = 'cpu'
 softmax = torch.nn.Softmax(dim=-1)
 
-if not os.path.isdir(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
+if not os.path.isdir(args.output_dir):
+    os.makedirs(args.output_dir)
 
-if not os.path.isdir(os.path.join(OUTPUT_DIR, args.img_folder)):
-    os.makedirs(os.path.join(OUTPUT_DIR, args.img_folder))
-out_name = os.path.join(OUTPUT_DIR, args.img_folder)
+if not os.path.isdir(os.path.join(args.output_dir, args.img_folder)):
+    os.makedirs(os.path.join(args.output_dir, args.img_folder))
+out_name = os.path.join(args.output_dir, args.img_folder)
 #--------------------------------#
 
 
@@ -98,7 +98,7 @@ dataloader = DataLoader(face_dataset, batch_size = args.batch_size,
 
 #--------------- Load Weights ----------------#
 net = ConvNet(3, args.K).to(device)
-checkpoint = torch.load(os.path.join(OUTPUT_DIR, args.checkpoint))
+checkpoint = torch.load(os.path.join(args.output_dir, args.checkpoint))
 net.load_state_dict(checkpoint['model_state_dict'])
 #---------------------------------------------#
 
