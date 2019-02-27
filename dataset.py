@@ -62,8 +62,8 @@ class PreprocessData(object):
         
         image = sample['image']
         name = sample['name']
-
-
+        
+        
         #image rane [0 1]-->[-1 1]
         image = image*2-1
         
@@ -81,16 +81,16 @@ class PreprocessData(object):
 
         if self.mode == "train":
             #deform input images
-            input_image, _ =image_warping(image, w=0.0) 
+            input_image, _ = image_warping(image, w = 0.0) 
             
             # x' = x.g1.g2
-            deformed_image, deformation = image_warping(input_image, w=0.1)
+            deformed_image, deformation = image_warping(input_image, w = 0.1)
             deformed_image, deformation = deformed_image, deformation 
             deformation = deformation[0]
             
             #crop after warping
-            input_image    = input_image[5:5+self.crop_size, 5: 5 + self.crop_size]
-            deformed_image = deformed_image[5:5+self.crop_size, 5: 5 + self.crop_size] 
+            input_image    = input_image[5 : 5 + self.crop_size, 5 : 5 + self.crop_size]
+            deformed_image = deformed_image[5 : 5 + self.crop_size, 5 : 5 + self.crop_size] 
 
             # #resize    
             # input_image    = skimage.transform.resize(input_image, (128, 128),anti_aliasing=True, mode='reflect')

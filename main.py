@@ -28,7 +28,7 @@ LEARNING_RATE = 1.e-4
 MOMENTUM = 0.5
 WEIGHT_DECAY = 0.0005
 SCALE_SIZE = 146
-CROP_SIZE = 146
+CROP_SIZE = 128
 MAX_EPOCH = 100
 OUTPUT_DIR = './OUTPUT'
 CHECKPOINT = './OUTPUT/checkpoint' 
@@ -92,9 +92,6 @@ def spatialSoft(out, args):
 
 
     return x
-
-# def weight_decay():
-
 
 
 def diversityLoss(p, args):
@@ -230,7 +227,7 @@ def main():
     args = get_arguments()
 
     face_dataset = ImageData(root_dir=args.input_dir,\
-                                    transform=transforms.Compose([PreprocessData(args.scale_size,args.crop_size)]))
+                                    transform=transforms.Compose([PreprocessData(args.scale_size, args.crop_size)]))
     dataloader = DataLoader(face_dataset, batch_size=args.batch_size, shuffle=True)
     
     ########### setup network ##############

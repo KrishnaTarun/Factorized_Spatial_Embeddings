@@ -17,12 +17,11 @@ BATCH_SIZE = 1
 DATA_DIRECTORY = '../FSE_tf/celebA/test_MAFL/'
 LANDMARK_N = 8
 SCALE_SIZE = 146
-CROP_SIZE = 146
+CROP_SIZE = 128
 OUTPUT_DIR = './OUTPUT'
 CHECKPOINT = './OUTPUT/checkpoint' 
 MODE = 'test'
 
-resize = transforms.Resize(128)
 #---------------------------------#
 def get_arguments():
     """Parse all the arguments provided from the CLI.
@@ -51,6 +50,7 @@ def get_arguments():
     return parser.parse_args()
 
 args = get_arguments()
+
 def spatialSoft(out, args):
     
     a_size= out.size()[-1]
@@ -62,6 +62,7 @@ def spatialSoft(out, args):
 
 
     return x
+
 def landmark_colors(n_landmarks):
     """Compute landmark colors.
 
@@ -70,15 +71,14 @@ def landmark_colors(n_landmarks):
     """
     cmap = cm.get_cmap('hsv')
     landmark_color = []
-    landmark_color.append((0., 0., 0.))
+    landmark_color.append((0., 0., 1.))
     for i in range(n_landmarks):
         landmark_color.append(cmap(i/float(n_landmarks))[0:3])
     landmark_color = np.array(landmark_color)
     return landmark_color
 
-# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = 'cpu'
-
 softmax = torch.nn.Softmax(dim=-1)
 
 if not os.path.isdir(OUTPUT_DIR):
@@ -91,9 +91,11 @@ out_name = os.path.join(OUTPUT_DIR, args.img_folder)
 
 
 face_dataset = ImageData(root_dir=args.input_dir,\
-                                transform=transforms.Compose([PreprocessData(args.scale_size,args.crop_size, mode= args.mode)]))
+                                transform=transforms.Compose([PreprocessData(args.scale_size, args.crop_size, mode= args.mode)]))
 dataloader = DataLoader(face_dataset, batch_size = args.batch_size,
                         shuffle = True)
+
+
 #--------------- Load Weights ----------------#
 net = ConvNet(3, args.K).to(device)
 checkpoint = torch.load(args.checkpoint)
@@ -106,6 +108,8 @@ net.load_state_dict(checkpoint['model_state_dict'])
 #-------------visualize----------------------#
 net.eval()
 with torch.no_grad():
+
+    clr = landmark_colors(args.K)
 
     for i_batch, sample_batched in enumerate(dataloader):
         i_image =  sample_batched['image']
@@ -140,7 +144,7 @@ with torch.no_grad():
         val = torch.masked_select(mask, mask_, out=None) 
         # print(val, indx)
         
-        clr = landmark_colors(args.K)
+        
 
         def visualizePlot(mask, i_image, val, indx):
 
@@ -174,9 +178,9 @@ with torch.no_grad():
                 cX = round(idx[1]*resize_scale)
                 cY = round(idx[0]*resize_scale)
 
-                cv2.circle(i_image, (int(cX), int(cY)), 2, clr[id_], -1)
-                cv2.putText(i_image, str(int(val)), (int(cX), int(cY)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.25, clr[id_], 1)
+                cv2.circle(i_image, (int(cX), int(cY)), 2, (1.0,1.0,1.0), -1)
+                # cv2.putText(i_image, str(int(val)), (int(cX), int(cY)),
+                #     cv2.FONT_HERSHEY_SIMPLEX, 0.25, clr[id_], 1)
 
                 id_+=1
 
@@ -185,7 +189,6 @@ with torch.no_grad():
             # plt.show()
 
         visualizePlot(mask_, i_image, val, indx)
-        # break
         
        
 
