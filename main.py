@@ -29,9 +29,9 @@ MOMENTUM = 0.5
 WEIGHT_DECAY = 0.0005
 SCALE_SIZE = 146
 CROP_SIZE = 128
-MAX_EPOCH = 100
-OUTPUT_DIR = './OUTPUT'
-CHECKPOINT = './OUTPUT/checkpoint' 
+MAX_EPOCH = 6
+OUTPUT_DIR = 'OUTPUT'
+CHECKPOINT = 'checkpoint' 
 #-------------------------------#
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print(device)
@@ -40,8 +40,6 @@ print(device)
 softmax = torch.nn.Softmax(dim=-1)
 AvgPool = torch.nn.AvgPool2d(DOWNSAMPLE_M , stride=1, padding=0)
 
-if not os.path.isdir(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
 #--------------------------------#
 def get_arguments():
     """Parse all the arguments provided from the CLI.
@@ -159,9 +157,9 @@ def alignLoss(p1, p2, deformation, args):
     loss= torch.mean(t1 + t2 - 2.* t3)
     return args.align_weight * loss.unsqueeze(0)
 
-def train(dataloader, net, optimizer, args):
+def train(dataloader, net, optimizer, args, OUTPUT_DIR):
 
-    if os.path.isfile(args.checkpoint):
+    if os.path.isfile(os.path.join(OUTPUT_DIR, args.checkpoint)):
         print ("loading from checkpoint...")
         checkpoint = torch.load(args.checkpoint)
         net.load_state_dict(checkpoint['model_state_dict'])
@@ -214,7 +212,7 @@ def train(dataloader, net, optimizer, args):
                     'model_state_dict': net.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict(),
                     'loss': loss,}, 
-                    args.checkpoint)
+                    os.path.join(OUTPUT_DIR, args.checkpoint))
                     store = loss.item()
 
             steps+=1
@@ -225,6 +223,9 @@ def train(dataloader, net, optimizer, args):
 def main():
 
     args = get_arguments()
+
+    if not os.path.isdir(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
 
     face_dataset = ImageData(root_dir=args.input_dir,\
                                     transform=transforms.Compose([PreprocessData(args.scale_size, args.crop_size)]))

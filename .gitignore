@@ -1,3 +1,4 @@
 OUTPUT/*
 check.py
 __pycache__/*
+job.sh

@@ -18,8 +18,8 @@ DATA_DIRECTORY = '../FSE_tf/celebA/test_MAFL/'
 LANDMARK_N = 8
 SCALE_SIZE = 146
 CROP_SIZE = 128
-OUTPUT_DIR = './OUTPUT'
-CHECKPOINT = './OUTPUT/checkpoint' 
+OUTPUT_DIR = 'OUTPUT'
+CHECKPOINT = 'checkpoint' 
 MODE = 'test'
 
 #---------------------------------#
@@ -98,7 +98,7 @@ dataloader = DataLoader(face_dataset, batch_size = args.batch_size,
 
 #--------------- Load Weights ----------------#
 net = ConvNet(3, args.K).to(device)
-checkpoint = torch.load(args.checkpoint)
+checkpoint = torch.load(os.path.join(OUTPUT_DIR, args.checkpoint))
 net.load_state_dict(checkpoint['model_state_dict'])
 #---------------------------------------------#
 
